@@ -14,6 +14,7 @@
 
 二值化的方案一共有7种：
 - 一元码(Unary)
+- 截断一元码(TU, Truncated Unary)
 
 ### 一元码(Unary)
 
@@ -37,6 +38,36 @@ static void unary_bin_encode(EncodingEnvironmentPtr eep_dp,
         while ((--symbol) > 0)
             biari_encode_symbol(eep_dp, 1, ctx);
         biari_encode_symbol(eep_dp, 0, ctx);
+    }
+}
+```
+
+### 截断一元码(TU, Truncated Unary)
+
+> 一元码的变体，用在已知语法元素最大`cMax`的情况下，对于`0 <= x < cMax`的范围的语法元素，使用一元码进行二值化。对于`x = cMax`，其二值化串全部由一组成，长度为`cMax`。
+
+例如：cMax=5 二值化结果：11111
+
+下面是JM中截断一元码的实现：
+```c
+static void unary_bin_max_encode(EncodingEnvironmentPtr eep_dp,
+                                 unsigned int symbol,
+                                 BiContextTypePtr ctx,
+                                 int ctx_offset,
+                                 unsigned int max_symbol)
+{
+    if (symbol==0) {
+        biari_encode_symbol(eep_dp, 0, ctx );
+        return;
+    } else {
+        unsigned int l = symbol;
+        biari_encode_symbol(eep_dp, 1, ctx );
+
+        ctx += ctx_offset;
+        while ((--l)>0)
+            biari_encode_symbol(eep_dp, 1, ctx);
+        if (symbol < max_symbol)
+            biari_encode_symbol(eep_dp, 0, ctx);
     }
 }
 ```
