@@ -15,6 +15,7 @@
 二值化的方案一共有7种：
 - 一元码(Unary)
 - 截断一元码(TU, Truncated Unary)
+- K阶指数哥伦布编码(kth order Exp-Golomb, EGk)
 
 ### 一元码(Unary)
 
@@ -71,6 +72,11 @@ static void unary_bin_max_encode(EncodingEnvironmentPtr eep_dp,
     }
 }
 ```
+
+### K阶指数哥伦布编码(kth order Exp-Golomb, EGk)
+
+> 指数哥伦布编码由前缀和后缀组成。其中前缀部分由$l(x) = [\log_{2}(2^{k}+1)]$的值所对应的一元码组成；后缀部分可以通过使用长度`k+l(x)`为的`x+2k(1-2l(k))`的二进制计算。
+
 
 ## Cabac编码总结
 
